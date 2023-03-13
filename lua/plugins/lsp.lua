@@ -1,58 +1,159 @@
 return {
+  -- tools
   {
-
     "williamboman/mason.nvim",
-    cmd = "Mason",
-    keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
     opts = {
       ensure_installed = {
-        "stylua",
-        "shellcheck",
-        "black",
         "prettierd",
+        "stylua",
+        "selene",
+        "luacheck",
+        "eslint_d",
+        "shellcheck",
+        -- "deno",
         "shfmt",
+        "black",
+        "isort",
         "flake8",
       },
     },
-    ---@param opts MasonSettings | {ensure_installed: string[]}
-    config = function(plugin, opts)
-      require("mason").setup(opts)
-      local mr = require("mason-registry")
-      for _, tool in ipairs(opts.ensure_installed) do
-        local p = mr.get_package(tool)
-        if not p:is_installed() then
-          p:install()
-        end
-      end
-    end,
   },
+
+  -- lsp servers
   {
     "neovim/nvim-lspconfig",
-    ---@class PluginLspOpts
     opts = {
       ---@type lspconfig.options
       servers = {
-        -- pyright will be automatically installed with mason and loaded with lspconfig
+        astro = {},
+        ansiblels = {},
+        bashls = {},
+        clangd = {},
+        denols = false,
+        cssls = {},
+        dockerls = {},
+        tsserver = {},
+        svelte = {},
+        -- eslint = {},
+        html = {},
+        gopls = {},
+        marksman = {},
         pyright = {},
+        rust_analyzer = {
+          settings = {
+            ["rust-analyzer"] = {
+              procMacro = { enable = true },
+              cargo = { allFeatures = true },
+              checkOnSave = {
+                command = "clippy",
+                extraArgs = { "--no-deps" },
+              },
+            },
+          },
+        },
+        yamlls = {},
+        lua_ls = {
+          -- cmd = { "/home/folke/projects/lua-language-server/bin/lua-language-server" },
+          single_file_support = true,
+          settings = {
+            Lua = {
+              workspace = {
+                checkThirdParty = false,
+              },
+              completion = {
+                workspaceWord = true,
+                callSnippet = "Both",
+              },
+              misc = {
+                parameters = {
+                  "--log-level=trace",
+                },
+              },
+              diagnostics = {
+                -- enable = false,
+                groupSeverity = {
+                  strong = "Warning",
+                  strict = "Warning",
+                },
+                groupFileStatus = {
+                  ["ambiguity"] = "Opened",
+                  ["await"] = "Opened",
+                  ["codestyle"] = "None",
+                  ["duplicate"] = "Opened",
+                  ["global"] = "Opened",
+                  ["luadoc"] = "Opened",
+                  ["redefined"] = "Opened",
+                  ["strict"] = "Opened",
+                  ["strong"] = "Opened",
+                  ["type-check"] = "Opened",
+                  ["unbalanced"] = "Opened",
+                  ["unused"] = "Opened",
+                },
+                unusedLocalExclude = { "_*" },
+              },
+              format = {
+                enable = false,
+                defaultConfig = {
+                  indent_style = "space",
+                  indent_size = "2",
+                  continuation_indent_size = "2",
+                },
+              },
+            },
+          },
+        },
+        vimls = {},
+        -- tailwindcss = {},
       },
     },
   },
+
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      setup = {
+        clangd = function(_, opts)
+          opts.capabilities.offsetEncoding = { "utf-16" }
+        end,
+      },
+    },
+  },
+
+  -- null-ls
   {
     "jose-elias-alvarez/null-ls.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "mason.nvim" },
-    opts = function()
+    config = function()
       local nls = require("null-ls")
-      return {
+      nls.setup({
+        debounce = 150,
+        save_after_format = false,
         sources = {
-          nls.builtins.formatting.prettierd,
+          -- nls.builtins.formatting.prettierd,
           nls.builtins.formatting.stylua,
+          nls.builtins.formatting.fish_indent,
+          -- nls.builtins.formatting.fixjson.with({ filetypes = { "jsonc" } }),
+          -- nls.builtins.formatting.eslint_d,
+          -- nls.builtins.diagnostics.shellcheck,
+          nls.builtins.formatting.shfmt,
+          nls.builtins.diagnostics.markdownlint,
+          -- nls.builtins.diagnostics.luacheck,
+          nls.builtins.formatting.prettierd.with({
+            filetypes = { "markdown" }, -- only runs `deno fmt` for markdown
+          }),
+          nls.builtins.diagnostics.selene.with({
+            condition = function(utils)
+              return utils.root_has_file({ "selene.toml" })
+            end,
+          }),
+          -- nls.builtins.code_actions.gitsigns,
+          nls.builtins.formatting.isort,
           nls.builtins.formatting.black,
           nls.builtins.diagnostics.flake8.with({
             extra_args = { "--max-line-length=88" },
           }),
         },
-      }
+        root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", ".git"),
+      })
     end,
   },
 }
