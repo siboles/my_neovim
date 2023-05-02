@@ -7,10 +7,8 @@ return {
         "prettierd",
         "stylua",
         "selene",
-        "luacheck",
         "eslint_d",
         "shellcheck",
-        -- "deno",
         "shfmt",
         "black",
         "isort",
@@ -138,7 +136,7 @@ return {
           nls.builtins.diagnostics.markdownlint,
           -- nls.builtins.diagnostics.luacheck,
           nls.builtins.formatting.prettierd.with({
-            filetypes = { "markdown" }, -- only runs `deno fmt` for markdown
+            filetypes = { "markdown", "json" }, -- only runs `deno fmt` for markdown
           }),
           nls.builtins.diagnostics.selene.with({
             condition = function(utils)
