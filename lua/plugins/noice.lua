@@ -1,3 +1,7 @@
+if true then
+  return {}
+end
+
 local M = {
   "folke/noice.nvim",
   event = "VeryLazy",
