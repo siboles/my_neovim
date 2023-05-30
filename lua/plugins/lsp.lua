@@ -49,9 +49,8 @@ return {
             },
           },
         },
-        yamlls = {},
+        yamlls = { settings = { yaml = { keyOrdering = false } } },
         lua_ls = {
-          -- cmd = { "/home/folke/projects/lua-language-server/bin/lua-language-server" },
           single_file_support = true,
           settings = {
             Lua = {
@@ -126,7 +125,6 @@ return {
         debounce = 150,
         save_after_format = false,
         sources = {
-          -- nls.builtins.formatting.prettierd,
           nls.builtins.formatting.stylua,
           nls.builtins.formatting.fish_indent,
           -- nls.builtins.formatting.fixjson.with({ filetypes = { "jsonc" } }),
@@ -147,7 +145,7 @@ return {
           nls.builtins.formatting.isort,
           nls.builtins.formatting.black,
           nls.builtins.diagnostics.flake8.with({
-            extra_args = { "--max-line-length=88" },
+            extra_args = { "--max-line-length=88", "--ignore=E203" },
           }),
         },
         root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", ".git"),
