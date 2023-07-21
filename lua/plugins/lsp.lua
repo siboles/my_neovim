@@ -11,6 +11,7 @@ return {
         "shfmt",
         "black",
         "flake8",
+        "isort",
       },
     },
   },
