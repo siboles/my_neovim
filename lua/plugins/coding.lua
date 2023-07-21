@@ -103,34 +103,34 @@ return {
     config = function()
       local bracketed = require("mini.bracketed")
 
-      local function put(cmd, regtype)
-        local body = vim.fn.getreg(vim.v.register)
-        local type = vim.fn.getregtype(vim.v.register)
-        ---@diagnostic disable-next-line: param-type-mismatch
-        vim.fn.setreg(vim.v.register, body, regtype or "l")
-        bracketed.register_put_region()
-        vim.cmd(('normal! "%s%s'):format(vim.v.register, cmd:lower()))
-        ---@diagnostic disable-next-line: param-type-mismatch
-        vim.fn.setreg(vim.v.register, body, type)
-      end
-
-      for _, cmd in ipairs({ "]p", "[p" }) do
-        vim.keymap.set("n", cmd, function()
-          put(cmd)
-        end)
-      end
-      for _, cmd in ipairs({ "]P", "[P" }) do
-        vim.keymap.set("n", cmd, function()
-          put(cmd, "c")
-        end)
-      end
-
-      local put_keys = { "p", "P" }
-      for _, lhs in ipairs(put_keys) do
-        vim.keymap.set({ "n", "x" }, lhs, function()
-          return bracketed.register_put_region(lhs)
-        end, { expr = true })
-      end
+      -- local function put(cmd, regtype)
+      --   local body = vim.fn.getreg(vim.v.register)
+      --   local type = vim.fn.getregtype(vim.v.register)
+      --   ---@diagnostic disable-next-line: param-type-mismatch
+      --   vim.fn.setreg(vim.v.register, body, regtype or "l")
+      --   bracketed.register_put_region()
+      --   vim.cmd(('normal! "%s%s'):format(vim.v.register, cmd:lower()))
+      --   ---@diagnostic disable-next-line: param-type-mismatch
+      --   vim.fn.setreg(vim.v.register, body, type)
+      -- end
+      --
+      -- for _, cmd in ipairs({ "]p", "[p" }) do
+      --   vim.keymap.set("n", cmd, function()
+      --     put(cmd)
+      --   end)
+      -- end
+      -- for _, cmd in ipairs({ "]P", "[P" }) do
+      --   vim.keymap.set("n", cmd, function()
+      --     put(cmd, "c")
+      --   end)
+      -- end
+      --
+      -- local put_keys = { "p", "P" }
+      -- for _, lhs in ipairs(put_keys) do
+      --   vim.keymap.set({ "n", "x" }, lhs, function()
+      --     return bracketed.register_put_region(lhs)
+      --   end, { expr = true })
+      -- end
 
       bracketed.setup({
         file = { suffix = "" },
@@ -138,69 +138,6 @@ return {
         quickfix = { suffix = "" },
         treesitter = { suffix = "n" },
       })
-    end,
-  },
-
-  -- better yank/paste
-  {
-    "kkharji/sqlite.lua",
-    enabled = function()
-      return require("lazyvim.util").has("yanky.nvim") and not jit.os:find("Windows")
-    end,
-  },
-  {
-    "gbprod/yanky.nvim",
-    enabled = false,
-    event = "BufReadPost",
-    config = function()
-      -- vim.g.clipboard = {
-      --   name = "xsel_override",
-      --   copy = {
-      --     ["+"] = "xsel --input --clipboard",
-      --     ["*"] = "xsel --input --primary",
-      --   },
-      --   paste = {
-      --     ["+"] = "xsel --output --clipboard",
-      --     ["*"] = "xsel --output --primary",
-      --   },
-      --   cache_enabled = 1,
-      -- }
-
-      require("yanky").setup({
-        highlight = {
-          timer = 150,
-        },
-        ring = {
-          storage = jit.os:find("Windows") and "shada" or "sqlite",
-        },
-      })
-
-      vim.keymap.set({ "n", "x" }, "y", "<Plug>(YankyYank)")
-
-      vim.keymap.set({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
-      vim.keymap.set({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
-      vim.keymap.set({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)")
-      vim.keymap.set({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)")
-
-      vim.keymap.set("n", "<c-n>", "<Plug>(YankyCycleForward)")
-      vim.keymap.set("n", "<c-p>", "<Plug>(YankyCycleBackward)")
-
-      vim.keymap.set("n", "]p", "<Plug>(YankyPutIndentAfterLinewise)")
-      vim.keymap.set("n", "[p", "<Plug>(YankyPutIndentBeforeLinewise)")
-      vim.keymap.set("n", "]P", "<Plug>(YankyPutIndentAfterLinewise)")
-      vim.keymap.set("n", "[P", "<Plug>(YankyPutIndentBeforeLinewise)")
-
-      vim.keymap.set("n", ">p", "<Plug>(YankyPutIndentAfterShiftRight)")
-      vim.keymap.set("n", "<p", "<Plug>(YankyPutIndentAfterShiftLeft)")
-      vim.keymap.set("n", ">P", "<Plug>(YankyPutIndentBeforeShiftRight)")
-      vim.keymap.set("n", "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)")
-
-      vim.keymap.set("n", "=p", "<Plug>(YankyPutAfterFilter)")
-      vim.keymap.set("n", "=P", "<Plug>(YankyPutBeforeFilter)")
-
-      vim.keymap.set("n", "<leader>P", function()
-        require("telescope").extensions.yank_history.yank_history({})
-      end, { desc = "Paste from Yanky" })
     end,
   },
 

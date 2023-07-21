@@ -2,20 +2,10 @@ return {
   { "nvim-treesitter/playground", cmd = "TSPlaygroundToggle" },
 
   {
-    "mfussenegger/nvim-treehopper",
-    keys = { { "m", mode = { "o", "x" } } },
-    config = function()
-      vim.cmd([[
-        omap     <silent> m :<C-U>lua require('tsht').nodes()<CR>
-        xnoremap <silent> m :lua require('tsht').nodes()<CR>
-      ]])
-    end,
-  },
-
-  {
     "nvim-treesitter/nvim-treesitter-context",
     event = "BufReadPre",
-    config = true,
+    enabled = true,
+    opts = { mode = "cursor" },
   },
 
   {
@@ -34,14 +24,12 @@ return {
         "gitignore",
         "go",
         "graphql",
-        "help",
         "html",
         "http",
         "java",
         "javascript",
         "jsdoc",
         "jsonc",
-        "latex",
         "lua",
         "luap",
         "markdown",
@@ -65,6 +53,7 @@ return {
         "typescript",
         "vhs",
         "vim",
+        "vimdoc",
         "vue",
         "wgsl",
         "yaml",
@@ -75,7 +64,7 @@ return {
       matchup = {
         enable = true,
       },
-      highlight = { enable = true },
+      -- highlight = { enable = true },
       query_linter = {
         enable = true,
         use_virtual_text = true,
@@ -99,6 +88,12 @@ return {
           show_help = "?",
         },
       },
+    },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    dependencies = {
+      { "windwp/nvim-ts-autotag", opts = {} },
     },
   },
 }

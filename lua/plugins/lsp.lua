@@ -7,11 +7,9 @@ return {
         "prettierd",
         "stylua",
         "selene",
-        "eslint_d",
         "shellcheck",
         "shfmt",
         "black",
-        "isort",
         "flake8",
       },
     },
@@ -20,36 +18,52 @@ return {
   -- lsp servers
   {
     "neovim/nvim-lspconfig",
+    init = function()
+      -- disable lsp watcher. Too slow on linux
+      local ok, wf = pcall(require, "vim.lsp._watchfiles")
+      if ok then
+        wf._watchfunc = function()
+          return function() end
+        end
+      end
+    end,
     opts = {
+      inlay_hints = { enabled = true },
       ---@type lspconfig.options
       servers = {
-        astro = {},
         ansiblels = {},
         bashls = {},
         clangd = {},
-        denols = false,
+        -- denols = {},
         cssls = {},
         dockerls = {},
-        tsserver = {},
+        ruff_lsp = {},
         svelte = {},
-        -- eslint = {},
         html = {},
         gopls = {},
         marksman = {},
-        pyright = {},
+        pyright = {
+          enabled = false,
+        },
         rust_analyzer = {
+          -- settings = {
+          --   ["rust-analyzer"] = {
+          --     procMacro = { enable = true },
+          --     cargo = { allFeatures = true },
+          --     checkOnSave = {
+          --       command = "clippy",
+          --       extraArgs = { "--no-deps" },
+          --     },
+          --   },
+          -- },
+        },
+        yamlls = {
           settings = {
-            ["rust-analyzer"] = {
-              procMacro = { enable = true },
-              cargo = { allFeatures = true },
-              checkOnSave = {
-                command = "clippy",
-                extraArgs = { "--no-deps" },
-              },
+            yaml = {
+              keyOrdering = false,
             },
           },
         },
-        yamlls = { settings = { yaml = { keyOrdering = false } } },
         lua_ls = {
           single_file_support = true,
           settings = {
@@ -63,10 +77,25 @@ return {
               },
               misc = {
                 parameters = {
-                  "--log-level=trace",
+                  -- "--log-level=trace",
                 },
               },
+              hint = {
+                enable = true,
+                setType = false,
+                paramType = true,
+                paramName = "Disable",
+                semicolon = "Disable",
+                arrayIndex = "Disable",
+              },
+              doc = {
+                privateName = { "^_" },
+              },
+              type = {
+                castNumberToInteger = true,
+              },
               diagnostics = {
+                disable = { "incomplete-signature-doc", "trailing-space" },
                 -- enable = false,
                 groupSeverity = {
                   strong = "Warning",
@@ -100,8 +129,8 @@ return {
           },
         },
         vimls = {},
-        -- tailwindcss = {},
       },
+      setup = {},
     },
   },
 
@@ -119,37 +148,26 @@ return {
   -- null-ls
   {
     "jose-elias-alvarez/null-ls.nvim",
-    config = function()
+    event = {"BufReadPre", "BufNewFile"},
+    dependencies = {"mason.nvim"},
+    opts = function()
       local nls = require("null-ls")
-      nls.setup({
-        debounce = 150,
-        save_after_format = false,
+      return {
+        root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
         sources = {
-          nls.builtins.formatting.stylua,
-          nls.builtins.formatting.fish_indent,
-          -- nls.builtins.formatting.fixjson.with({ filetypes = { "jsonc" } }),
-          -- nls.builtins.formatting.eslint_d,
-          -- nls.builtins.diagnostics.shellcheck,
-          nls.builtins.formatting.shfmt,
-          nls.builtins.diagnostics.markdownlint,
-          -- nls.builtins.diagnostics.luacheck,
-          nls.builtins.formatting.prettierd.with({
-            filetypes = { "markdown", "json" }, -- only runs `deno fmt` for markdown
-          }),
-          nls.builtins.diagnostics.selene.with({
-            condition = function(utils)
-              return utils.root_has_file({ "selene.toml" })
-            end,
-          }),
-          -- nls.builtins.code_actions.gitsigns,
-          nls.builtins.formatting.isort,
-          nls.builtins.formatting.black,
-          nls.builtins.diagnostics.flake8.with({
-            extra_args = { "--max-line-length=88", "--ignore=E203" },
-          }),
-        },
-        root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", ".git"),
-      })
+        nls.builtins.formatting.prettier.with({ filetypes = { "markdown" } }),
+        nls.builtins.diagnostics.markdownlint,
+        nls.builtins.diagnostics.deno_lint,
+        nls.builtins.diagnostics.selene.with({
+          condition = function(utils)
+            return utils.root_has_file({ "selene.toml" })
+          end,
+        }),
+        nls.builtins.formatting.isort,
+        nls.builtins.formatting.black,
+        nls.builtins.diagnostics.flake8.with({ extra_args = { "--max-line-length=88", "--ignore=E203" } }),
+    },
+    }
     end,
-  },
+},
 }
