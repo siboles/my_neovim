@@ -11,5 +11,3 @@ local function map(mode, lhs, rhs, opts)
     vim.keymap.set(mode, lhs, rhs, opts)
   end
 end
-
-map("n", "<leader>df", "<cmd>Telescope dap frames<cr>", { desc = "Next dap frame" })
