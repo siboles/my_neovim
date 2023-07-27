@@ -10,7 +10,9 @@ return {
         "shellcheck",
         "shfmt",
         "black",
-        "flake8",
+        --"flake8",
+        "ruff",
+        "ruff-lsp",
         "isort",
         "pyright",
       },
@@ -40,9 +42,19 @@ return {
         html = {},
         gopls = {},
         marksman = {},
-        pyright = {},
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                typeCheckingMode = "off",
+                reportUnusedImport = false,
+              },
+            },
+          },
+        },
         rust_analyzer = {},
       },
+      setup = {},
     },
   },
 
@@ -66,11 +78,12 @@ return {
           nls.builtins.formatting.fish_indent,
           nls.builtins.diagnostics.fish,
           nls.builtins.formatting.stylua,
-          nls.builtins.formatting.prettier.with({ filetypes = { "markdown" } }),
+          nls.builtins.formatting.prettierd.with({ filetypes = { "markdown" } }),
           nls.builtins.diagnostics.markdownlint,
           nls.builtins.formatting.isort,
           nls.builtins.formatting.black,
-          nls.builtins.diagnostics.flake8.with({ extra_args = { "--max-line-length=88", "--ignore=E203" } }),
+          nls.builtins.diagnostics.ruff,
+          -- nls.builtins.diagnostics.flake8.with({ extra_args = { "--max-line-length=88", "--ignore=E203" } }),
         },
       }
     end,
