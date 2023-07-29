@@ -12,7 +12,6 @@ return {
         "black",
         --"flake8",
         "ruff",
-        "ruff-lsp",
         "isort",
         "pyright",
       },

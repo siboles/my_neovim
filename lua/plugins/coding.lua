@@ -142,8 +142,8 @@ return {
 
   {
     "hrsh7th/nvim-cmp",
-    cond = function()
-      return require("lazyvim.util").has("nvim-cmp")
-    end,
+    -- cond = function()
+    --   return require("lazyvim.util").has("nvim-cmp")
+    -- end,
   },
 }
