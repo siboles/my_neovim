@@ -25,6 +25,7 @@ git clone git@github.com:siboles/my_neovim.git ~/.config/nvim
 
 ## External Dependencies
 
-- [black](https://github.com/psf/black) - Python formatter
-- [pyright](https://github.com/microsoft/pyright) - Python language server
-- [prettierd](https://github.com/fsouza/prettierd) - multilanguage (JSON, YAML, JavaScript,...) formatter (daemon version)
+Most dependencies are now handled by mason. You will still need to install the following:
+
+- [ripgrep](https://github.com/BurntSushi/ripgrep)
+- [lazygit](https://github.com/jesseduffield/lazygit) 
