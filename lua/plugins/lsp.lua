@@ -10,7 +10,7 @@ return {
         "shellcheck",
         "shfmt",
         "black",
-        --"flake8",
+        "markdownlint",
         "ruff",
         "isort",
         "pyright",
