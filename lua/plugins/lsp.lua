@@ -127,6 +127,7 @@ return {
           nls.builtins.formatting.black,
           nls.builtins.diagnostics.ruff,
           nls.builtins.formatting.ocamlformat,
+          nls.builtins.formatting.clang_format,
           -- nls.builtins.diagnostics.flake8.with({ extra_args = { "--max-line-length=88", "--ignore=E203" } }),
         },
       }
