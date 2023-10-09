@@ -27,5 +27,17 @@ git clone git@github.com:siboles/my_neovim.git ~/.config/nvim
 
 Most dependencies are now handled by mason. You will still need to install the following:
 
+- [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [ripgrep](https://github.com/BurntSushi/ripgrep)
 - [lazygit](https://github.com/jesseduffield/lazygit) 
+
+The following language compiler suites (or you can disable the languages in plugins/lsp.lua)
+
+- [go](https://go.dev/doc/install)
+- [opam](https://opam.ocaml.org/)
+- [rustup](https://rustup.rs/)
+- [llvm](https://llvm.org/)
+
+## Troubleshooting
+
+If you are getting error notifications, a good place to start is typing :MasonLog in an nvim session. Most likely, you are missing a system level dependency, which Mason or lazy.nvim cannot resolve.
