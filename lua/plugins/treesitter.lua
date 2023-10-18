@@ -16,7 +16,6 @@ return {
         "bash",
         "c",
         "cmake",
-        -- "comment", -- comments are slowing down TS bigtime, so disable for now
         "cpp",
         "css",
         "diff",
@@ -43,6 +42,7 @@ return {
         "python",
         "query",
         "regex",
+        "ron",
         "rust",
         "scss",
         "sql",
@@ -57,9 +57,7 @@ return {
         "vue",
         "wgsl",
         "yaml",
-        -- "wgsl",
         "json",
-        -- "markdown",
       },
       matchup = {
         enable = true,
